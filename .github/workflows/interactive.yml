@@ -1,19 +1,35 @@
 name: Interactive session
-on: workflow_dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      python_version:
+        description: Python Version
+        required: true
+        default: 3.11
+        type: choice
+        options: [3.7, 3.8, 3.9, '3.10', 3.11]
+
+      operating_system:
+        description: Operating System
+        required: true
+        default: ubuntu-latest
+        type: choice
+        options:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
 
 jobs:
   interactive:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        python-version: [3.7, 3.8, 3.9, '3.10', 3.11]
+    runs-on: ${{ inputs.operating_system }}
 
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ inputs.python_version }}
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
 
